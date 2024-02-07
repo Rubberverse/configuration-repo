@@ -36,7 +36,7 @@ ARG CONT_UID=1001
 
 COPY --from=builder --chmod=0755 /usr/bin/frps /usr/bin/frps
 COPY --from=builder --chmod=0755 /usr/bin/frpc /usr/bin/frpc
-COPY --chmod=0755 scripts/docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
+COPY --chmod=0755 docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
 
 RUN apt-get update; apt-get upgrade -y; apt install -y \
         openssl \
