@@ -35,7 +35,7 @@ ARG CONT_USER=frp
 
 COPY --from=builder --chmod=0755 /usr/bin/frps /usr/bin/frps
 COPY --from=builder --chmod=0755 /usr/bin/frpc /usr/bin/frpc
-COPY --chmod=0755 scripts/docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
+COPY --chmod=0755 docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
 
 RUN apk upgrade --no-cache; apk add --no-cache --repository=${ALPINE_REPO_URL}/${ALPINE_REPO_VERSION}/main \
         openssl \
