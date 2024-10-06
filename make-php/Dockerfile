@@ -89,5 +89,6 @@ RUN apk add --virtual build --no-cache --repository=https://dl-cdn.alpinelinux.o
         --enable-zts \
     && make \
     && make test \
-    && make install
+    && make install \
+    && apk del build
     # ==============================================================================================================================
