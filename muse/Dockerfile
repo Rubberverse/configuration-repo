@@ -1,8 +1,6 @@
 # =-=-=-=-=-=-=-=-=
 # Base Stage
 # =-=-=-=-=-=-=-=-=
-# Rootless Dockerfile running https://github.com/museofficial/muse
-# Size reduction: eventually lol
 
 ARG IMAGE_REPOSITORY=docker.io/library
 ARG IMAGE_ALPINE_VERSION=18-alpine3.20
@@ -35,7 +33,9 @@ ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
     ALPINE_REPO_VERSION=v3.20 \
     GIT_REPOSITORY=https://github.com/museofficial/muse.git \
     GIT_BRANCH=master \
-    GIT_WORKTREE=/app/worktree
+    GIT_WORKTREE=/app/worktree \
+
+ENV npm_config_cache=/app/.cache
 
 RUN apk add --no-cache --virtual build_ess --repository=${ALPINE_REPO_URL}/${ALPINE_REPO_VERSION}/main \
     git curl python3 build-base yarn \
@@ -49,8 +49,39 @@ RUN apk add --no-cache --virtual build_ess --repository=${ALPINE_REPO_URL}/${ALP
     && yarn install \
     && yarn prisma generate \
     && yarn build \
+    && yarn cache clean \
     && apk del build_ess \
-    && rm -vrf /app/worktree /var/cache/apk
+    && rm -rf /app/worktree /var/cache/apk /usr/app/muse/.git
+
+# =-=-=-=-=-=-=-=-=
+# Clean Pull Stage
+# =-=-=-=-=-=-=-=-=
+
+FROM alpine-base AS alpine-clean
+
+WORKDIR /usr/app
+
+ARG ALPINE_REPO_URL=https://dl-cdn.alpinelinux.org/alpine \
+    ALPINE_REPO_VERSION=v3.20 \
+    GIT_REPOSITORY=https://github.com/museofficial/muse.git \
+    GIT_BRANCH=master
+
+RUN apk add --no-cache --virtual build_ess --repository=${ALPINE_REPO_URL}/${ALPINE_REPO_VERSION}/main \
+    git \
+    # ============================================= #
+    && git config --global --add safe.directory '*' \
+    && git clone -b ${GIT_BRANCH} ${GIT_REPOSITORY} \
+    # ============================================= #
+    && apk del build_ess \
+    && rm -rf \
+        /app/worktree \
+        /var/cache/apk \
+        /usr/app/muse/.git \
+        /usr/app/muse/.github \
+    && rm \
+        /usr/app/muse/*.md \
+        /usr/app/muse/LICENSE \
+        /usr/app/muse/Dockerfile
 
 # =-=-=-=-=-=-=-=-=
 # Runner Stage
@@ -64,6 +95,11 @@ ARG CONT_USER=muse \
     CONT_SHELL=/bin/sh \
     CONT_UID=1001
 
+COPY --from=alpine-clean /usr/app/muse /app
+COPY --from=alpine-builder /usr/app/muse/dist dist
+COPY --from=alpine-builder /usr/app/prod_node_modules node_modules
+COPY --from=alpine-builder /usr/app/muse/node_modules/.prisma/client node_modules/.prisma/client
+
 RUN adduser \
     --home "/app" \
     --shell "$CONT_SHELL" \
@@ -71,9 +107,8 @@ RUN adduser \
     --disabled-password \
     --no-create-home \
     "$CONT_USER" \
-    && mkdir -p /app/data
-
-COPY --from=alpine-builder --chown=$CONT_USER /usr/app/muse /app
+    && mkdir -p /app/data \
+    && chown -R $CONT_USER /app/data
 
 ENV DATA_DIR=/app/data \
     NODE_ENV=production
