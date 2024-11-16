@@ -1,7 +1,5 @@
-# What is this?
+# 🤔 What is this repository?
 
-Random mish-mash of Dockerfiles I've made for fun, to test something or out of sheer boredom... or maybe because I needed something that doesn't run with weird combinations of hacked up parts in order to work properly. (or as root)
+Random mish-mash of Dockerfile(s) that I threw up to solve one thing or the other, or for fun... Just anything as a test or requiring small modifications.
 
-> Greatest way to practice writing something good is just to mess with it. - Sun Tzu (I made it up)
-
-
+Updated rarely unless I wanna spin up a instance.
