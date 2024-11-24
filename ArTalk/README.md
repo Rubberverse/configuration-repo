@@ -1,7 +1,10 @@
-# ArTalk
+## ArTalk
 
-Slight modification of the base Dockerfile to run as non-root user by default and `chown`'s one of user directories.
+Drop-in replacement for [ArTalkJS/ArTalk](https://github.com/ArtalkJS/Artalk) for manual build.
 
-Learn more about it on [ArTalk repository](https://github.com/ArtalkJS/Artalk)
+As always, doesn't do much. Only updates `apk` packages so they're up-to-date, uses `alpine:edge` and runs as `artalk` user with UID and GID of `1001`
 
-Replace their `Dockerfile` with this one and then run build.
+1. `git clone https://github.com/ArTalkJS/ArTalk.git`
+2. Replace Dockerfile with one here
+3. Build
+4. Profit
