@@ -20,7 +20,11 @@ COPY --from=source-code /app/package.json /app/yarn.lock ./
 # Add yarn timeout to handle slow CPU when Github Actions
 RUN yarn config set network-timeout 300000
 # [husky] Stop installation from failing due to non-existent .git folder
-RUN git init
+RUN set -x \
+    && apt update \
+    && apt install git curl -y \
+    && rm -rf /var/apt/cache \
+    && git init
 RUN yarn install --frozen-lockfile
 
 # Rebuild the source code only when needed
@@ -41,7 +45,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN yarn build-docker
 
 # Production image, copy all the files and run next
-FROM node:18-bookworm AS runner
+FROM node:18-bookworm-slim AS runner
 WORKDIR /app
 
 ENV DEBIAN_FRONTEND=noninteractive
