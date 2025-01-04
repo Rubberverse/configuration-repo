@@ -7,7 +7,8 @@ FROM node:${NODE_VERSION} as build
 ENV PYTHONUNBUFFERED=1
 RUN apt update \
         && apt upgrade -y --no-install-recommends \
-        && apt install -y --no-install-recommends linux-headers-amd64 build-essential python3 python3-pip python3-setup>        && ln -sf python3 /usr/bin/python
+        && apt install -y --no-install-recommends linux-headers-amd64 build-essential python3 python3-pip python3-setuptools git \
+        && ln -sf python3 /usr/bin/python
 
 RUN corepack enable
 
