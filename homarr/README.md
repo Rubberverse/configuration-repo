@@ -2,9 +2,11 @@
 
 Replacement Dockerfile, entrypoint script and redis config for [Homarr](https://github.com/homarr-labs/homarr)
 
-Image has been changed to use Bullseye from Alpine in order to solve the DNS issue under Podman pods getting EADDRNOTFOUND thingamajig.
+## Why?
 
-Opinionated, yeah.
+Alpine Linux fails to resolve DNS names under NodeJS when deployed via Pod or via Kubernetes (unless CacheDNS is used) due to it's use of `musl`.
+
+This Dockerfile changes the base image to something that works, albeit with a higher filesize - Debian.
 
 ## Changes
 
