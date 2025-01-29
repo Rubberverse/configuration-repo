@@ -1,6 +1,6 @@
-# Rubberverse Dockerfile(s)
+# Rubberverse Dockerfiles and Quadlet deployment examples
 
-Mish-mash of Dockerfile(s): for-fun, experimental and sometimes modified project Dockerfile(s) to suit my deployment needs.
+Mish-mash of random Dockerfiles that I've threw up and some edits of project Dockerfiles to suit my own needs. Along with optional Quadlet examples.
 
 ## But why?
 
