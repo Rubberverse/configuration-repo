@@ -9,15 +9,25 @@ Restart=on-failure
 Image=ghcr.io/homarr-labs/homarr:latest
 ContainerName=homarr
 # Secrets
+# printf "your_secure_secret" | podman secret create HOMARR_ENCRYPT_KEY -
+# then do history -c && clear afterwards
 Secret=HOMARR_ENCRYPT_KEY,type=env,target=SECRET_ENCRYPTION_KEY
 # Environments
-Environment=BASE_URL=<your domain>
+Environment=BASE_URL=<your_domain>
 # Volumes
-Volume=${HOME}/Builder/homarr/scripts/run.sh:/app/entrypoint.sh:ro,Z
+Volume=${HOME}/AppData/3_USER/homarr.sh:/app/entrypoint.sh:ro,Z
+Volume=${HOME}/AppData/3_USER/nginx.conf:/etc/nginx/nginx.conf:ro,Z
 # mkdir -p ~/AppData/2_PERSIST/HOMARR/DATABASE ~/AppData/2_PERSIST/HOMARR/REDIS ~/AppData/2_PERSIST/HOMARR/CA
-Volume=${HOME}/AppData/2_PERSIST/HOMARR/DATABASE:/appdata/db:rw,Z,U
-Volume=${HOME}/AppData/2_PERSIST/HOMARR/REDIS:/appdata/redis:rw,Z,U
-Volume=${HOME}/AppData/2_PERSIST/HOMARR/CA:/appdata/trusted-certificates:rw,Z
+Volume=${HOME}/AppData/2_PERSIST/HOMARR/DATABASE:/appdata/db:U,Z
+Volume=${HOME}/AppData/2_PERSIST/HOMARR/REDIS:/appdata/redis:U,Z
+Volume=${HOME}/AppData/2_PERSIST/HOMARR/CA:/appdata/trusted-certificates:U,Z
+# Nginx errors out without ability to write to these directories
+Volume=HMRRNGX:/var/lib/nginx:U,Z
+Volume=HMRRNGX:/var/log/nginx:U,Z
+Volume=HMRRNGX:/run/nginx:U,Z
+# Tmpfs
+# This is so nextjs stops complaining it has no access to cache
+Tmpfs=/app/apps/nextjs/.next/cache
 # Users
 User=1001:1001
 UserNS=auto
@@ -25,5 +35,6 @@ Pod=Homarr.pod
 # Labels
 AutoUpdate=registry
 NoNewPrivileges=true
+
 [Install]
 WantedBy=default.target
