@@ -1,0 +1,25 @@
+[Unit]
+Description=Trilium Next - Notes, Planning etc.
+
+[Install]
+WantedBy=default.target
+
+[Service]
+Restart=on-failure
+
+[Container]
+Image=ghcr.io/triliumnext/notes:v0.91.4-rc1
+ContainerName=trilium-next
+Exec=node ./src/main
+# Environments
+Environment=TRILIUM_DATA_DIR=/home/node/trilium-data
+# Volumes
+Mount=type=bind,src=/home/overseer/AppData/2_PERSIST/TRILIUM,dst=/home/node/trilium-data,rw,Z,U
+# Auto Updates
+AutoUpdate=registry
+NoNewPrivileges=true
+Pod=TriliumNext.pod
+# Runs as node user
+User=1000:1000
+UserNS=auto
+DNS=10.30.1.253
