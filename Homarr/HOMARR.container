@@ -1,0 +1,29 @@
+[Unit]
+Description=Homarr Dashboard
+
+[Service]
+Restart=on-failure
+
+[Container]
+# Base
+Image=ghcr.io/homarr-labs/homarr:latest
+ContainerName=homarr
+# Secrets
+Secret=HOMARR_ENCRYPT_KEY,type=env,target=SECRET_ENCRYPTION_KEY
+# Environments
+Environment=BASE_URL=<your domain>
+# Volumes
+Volume=${HOME}/Builder/homarr/scripts/run.sh:/app/entrypoint.sh:ro,Z
+# mkdir -p ~/AppData/2_PERSIST/HOMARR/DATABASE ~/AppData/2_PERSIST/HOMARR/REDIS ~/AppData/2_PERSIST/HOMARR/CA
+Volume=${HOME}/AppData/2_PERSIST/HOMARR/DATABASE:/appdata/db:rw,Z,U
+Volume=${HOME}/AppData/2_PERSIST/HOMARR/REDIS:/appdata/redis:rw,Z,U
+Volume=${HOME}/AppData/2_PERSIST/HOMARR/CA:/appdata/trusted-certificates:rw,Z
+# Users
+User=1001:1001
+UserNS=auto
+Pod=Homarr.pod
+# Labels
+AutoUpdate=registry
+NoNewPrivileges=true
+[Install]
+WantedBy=default.target
