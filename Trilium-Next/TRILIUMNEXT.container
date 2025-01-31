@@ -13,13 +13,13 @@ ContainerName=trilium-next
 Exec=node ./src/main
 # Environments
 Environment=TRILIUM_DATA_DIR=/home/node/trilium-data
-# Volumes
-Mount=type=bind,src=/home/overseer/AppData/2_PERSIST/TRILIUM,dst=/home/node/trilium-data,rw,Z,U
-# Auto Updates
+# Mounts
+# mkdir -p ~/AppData/2_PERSIST/TRILIUM
+Mount=type=bind,src=/home/<your_user>/AppData/2_PERSIST/TRILIUM,dst=/home/node/trilium-data,rw,Z,U
+# Labels
 AutoUpdate=registry
 NoNewPrivileges=true
-Pod=TriliumNext.pod
-# Runs as node user
+# Node User
 User=1000:1000
 UserNS=auto
-DNS=10.30.1.253
+Pod=TriliumNext.pod
