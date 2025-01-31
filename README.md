@@ -1,23 +1,17 @@
-# Rubberverse Dockerfiles and Quadlet deployment examples
+# Rubberverse Config Repo
 
-Mish-mash of random Dockerfiles that I've threw up and some edits of project Dockerfiles to suit my own needs. Along with optional Quadlet examples.
+This repository houses various workarounds and modified scripts or Dockerfiles to make images run as rootless user from the start, dropping `su-exec` or optionally going around the reverse proxies included in them.
 
-## But why?
+## Why?
 
-I have a specific ideology when deploying anything locally. It has to run rootlessly or at least give such option without crashing on startup with cursed errors or uselessly running `gosu` etc.
+My deployment ideology is that if your container needs to use `gosu`, `su-exec` etc. in order to "run", you're doing it wrong. However, that's my own opinion! It gives people the comfort of not having to manually fix up permissions on their host to match those of their container user so some are willing to "overlook it" in order to achieve more or so the same result.
 
-I yoink a project's Dockerfile and modify it to suit my needs then build the project locally instead. If something doesn't work, I try to find out why and modify the Dockerfile enough so it actually manages to run as a rootless user without any need of privileged actions.
+However because I'm a stubborn idiot, I have opted for the approach of 'if I really like your project, I will find a way.' so thus this was born I guess.
 
-If there's been significant modifications, project gets forked into sub-project outside of `various-dockerfiles` repository and maintained there ex. `qor-nginx`
+## Experimental notice
 
-## Can I use them?
+All Dockerfiles, modified scripts and anything else you use from here is not the intended way to use the project. It also may or may not suddenly work with later versions. You use anything here at your own risk!
 
-I mean, yeah. It's public for a reason, go wild with it.
+## Can I use them, or submit PRs on your behalf?
 
-## Why not create a pull request?
-
-I'm lazy and it also means going through reviews and whatever. If you think a change would benefit a project, steal it off here and contribute it to such project instead!
-
-## Burger?
-
-Borgar.
+Yes, it's public out there so people can use it. Even if it's just submitting Quadlet deployment template to your favorite project.
